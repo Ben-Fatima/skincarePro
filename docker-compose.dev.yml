@@ -1,0 +1,62 @@
+# Mark Shust's Docker Configuration for Magento
+# (https://github.com/markshust/docker-magento)
+#
+# Version 33.0.0
+
+version: "3"
+
+services:
+  app:
+    volumes: &appvolumes
+      # Host mounts with performance penalty, only put what is necessary here
+      #- ./src/app/code:/var/www/html/app/code:cached
+      #- ./src/app/design:/var/www/html/app/design:cached
+      #- ./src/app/etc:/var/www/html/app/etc:cached
+      #- ./src/composer.json:/var/www/html/composer.json:cached
+      #- ./src/composer.lock:/var/www/html/composer.lock:cached
+      #- ./src/nginx.conf.sample:/var/www/html/nginx.conf:cached
+      #- ./src/auth.json:/var/www/html/auth.json:cached
+      #- ./src/m2-hotfixes:/var/www/html/m2-hotfixes:cached
+      #- ./src/patches:/var/www/html/patches:cached
+      #- ./src/var/log:/var/www/html/var/log:cached
+      #- ./src/var/report:/var/www/html/var/report:cached
+      # To sync your SSH to the container, uncomment the following line:
+      # - ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
+      # Linux only: remove the above lines and mount the entire src directory with:
+      - ./src:/var/www/html:cached
+      - ./specific/nginx.conf:/var/www/html/nginx.conf:cached
+      # We mount the all source folder (performance issue on Windows / MacOS)
+
+  phpfpm:
+    volumes: *appvolumes
+    # Linux only: host.docker.internal doesn't exist https://github.com/docker/for-linux/issues/264
+    # Uncomment two lines below & replace IP with result of: docker run --rm alpine ip route | awk 'NR==1 {print $3}'
+    #extra_hosts:
+    #  - "host.docker.internal:IP"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025"
+      - "8025:8025"
+
+  # Disabling cron by default as it uses higher CPU, enable if needed
+  #cron:
+  #  volumes: *appvolumes
+
+  # Mac OS only --> avoid issue with memory limit exceeded (No alive node + exited error 137
+  # elasticsearch:
+  #   environment:
+  #     - "ES_JAVA_OPTS= -Xms1024m -Xmx1024m"
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    ports:
+      - 8080:80
+    environment:
+      MYSQL_USERNAME: magento
+      MYSQL_ROOT_PASSWORD: magento
+      PMA_HOST: db

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PROJECT_NAME=ETA2
+MAGENTO_MYSQL_USER=magento
+MAGENTO_MYSQL_PASSWORD=magento
+MAGENTO_MYSQL_DATABASE=magento
+DB_BACKUPS_DIR=backup
+
+GENERATED_FILE=dbdump_${PROJECT_NAME}_$(date '+%Y%m%d_%H%M').sql.gz
+bin/clinotty mysqldump -hdb -u${MAGENTO_MYSQL_USER} -p${MAGENTO_MYSQL_PASSWORD} ${MAGENTO_MYSQL_DATABASE} --single-transaction --quick | sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/\*/' | gzip -c > ${DB_BACKUPS_DIR}/${GENERATED_FILE}
+echo "Backup generated in $DB_BACKUPS_DIR/$GENERATED_FILE"

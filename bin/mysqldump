@@ -1,0 +1,3 @@
+#!/bin/bash
+source env/db.env
+bin/cli mysqldump -hdb -uroot -pmagento magento "$@"
