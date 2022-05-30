@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="sqli" translate="label" sortOrder="1000">
+            <label>Sqli</label>
+        </tab>
+        <section id="splitorders" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0"
+                 showInStore="0">
+            <label>Split Orders</label>
+            <tab>sqli</tab>
+            <resource>Sqli_SplitOrders::splitorders_config</resource>
+            <group id="splitorder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0"
+                   showInStore="0">
+                <label>SplitOrders configuration</label>
+                <!-- enable/disable the module -->
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Enable</label>
+                    <comment>Enable / Disable split </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <!-- enable/disable split on the front -->
+
+                <field id="enablefront" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Enable / Disable split on front</label>
+                    <comment>Enable split order on front</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="enable">1</field></depends>
+                </field>
+                <!-- choose the split attribute -->
+                <field id="attributes" translate="label" type="select" sortOrder="30" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Product Attribute to Split</label>
+                    <source_model>Sqli\SplitOrders\Model\Config\Source\Attributes</source_model>
+                    <comment>Select an attribute, will be split products with the chosen attribute value.</comment>
+                    <depends><field id="enable">1</field></depends>
+
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
