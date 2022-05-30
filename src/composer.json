@@ -77,5 +77,12 @@
     },
     "extra": {
         "magento-force": "override"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true,
+            "magento/inventory-composer-installer": true,
+            "magento/magento-composer-installer": true
+        }
     }
 }
