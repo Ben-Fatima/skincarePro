@@ -48,5 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 src/vendor/
-
+env/db.env
+specific/env.php
 
